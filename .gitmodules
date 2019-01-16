@@ -1,3 +1,0 @@
-[submodule "pbrt-v3"]
-	path = pbrt-v3
-	url = https://github.com/mmp/pbrt-v3.git
