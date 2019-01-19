@@ -1,0 +1,27 @@
+ 
+LookAt 0 0 45  # eye
+       0 0  0  # look at point
+       1 0 0    # up vector
+Camera "perspective" "float fov" 45
+
+Sampler "halton" "integer pixelsamples" 32
+Integrator "path"
+Film "image" "string filename" ""
+     "integer xresolution" [600] "integer yresolution" [600]
+
+WorldBegin
+
+LightSource "infinite" "blackbody L" [5500 1]
+
+AttributeBegin
+  Texture "checks" "spectrum" "checkerboard"
+          "float uscale" [16] "float vscale" [16]
+          "rgb tex1" [0 0 0] "rgb tex2" [1 1 1]
+  Material "matte" "texture Kd" "checks"
+  Shape "trianglemesh"
+      "integer indices" [0 1 2 0 2 3]
+      "point P" [ -20 -20 0   20 -20 0   20 20 0   -20 20 0 ]
+      "float st" [ 0 0   1 0    1 1   0 1 ]
+AttributeEnd
+
+WorldEnd
