@@ -1,0 +1,19 @@
+ply
+format ascii 1.0
+comment Created by Blender 2.79 (sub 0) - www.blender.org, source file: 'guitarMinimal.blend'
+element vertex 4
+property float x
+property float y
+property float z
+property float nx
+property float ny
+property float nz
+element face 2
+property list uchar uint vertex_indices
+end_header
+10.094147 -8.523541 1.953204 0.006165 0.383168 0.923658
+11.493282 3.779997 -3.160105 0.006165 0.383168 0.923658
+-7.797312 5.696741 -3.826486 0.006165 0.383168 0.923658
+-9.196447 -6.606797 1.286823 0.006165 0.383168 0.923658
+3 0 1 2
+3 0 2 3
