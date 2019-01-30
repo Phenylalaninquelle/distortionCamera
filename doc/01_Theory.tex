@@ -1,0 +1,21 @@
+\section{Theorie}
+
+\subsection{Was ist ein Raytracer?}
+
+Dazu muss zu Erst der Begriff \textit{Rendering} erklärt werden. Dieser beschreibt ganz Allgemein den Prozess, der aus der Beschreibung einer dreidimensionalen Szene ein zweidimensionales Bild erzeugt. Dazu sind zahlreiche Algorithmen notwendig, welche beispielsweise Geometrien modellieren, Objekte animieren oder Texturen erzeugen und die Ergebnisse hiervon an den Render-Prozess weitergeben, um diese sichtbar zu machen. 
+
+Um eine dreidimensionale Szene in ein Bild abzubilden, kann sich des Ray-tracing Algorithmuses bedient werden. Wie sich bereits aus dem Begriff ableiten lässt, werden dabei die Pfade einzelner "`Lichtstrahlen"' verfolgt, bis diese auf eine Oberflächen treffen und es beispielsweise zu einer Reflektion kommt. 
+
+Da dabei nur diejenigen Strahlen von Interesse sind, welche auch tatsächlich auf den virtuellen Bildsensor treffen und auf ein Pixel im Bild abgebildet werden, verfolgen Ray-tracer diese in umgekehrter Richtung. Es werden also Strahlen am Bildsensor erzeugt und in die Szene geschickt. Auf diese Weise werden alle Lichtquellen identifiziert, die einen Beitrag zum Helligkeits- und Farbwert des gerade betrachteten Pixels leisten \cite{pbrt_book}. 
+
+Der in dieser Arbeit genutzte Ray-tracer ist \textit{pbrt}\cite{pbrt}. Dieser hat den Anspruch das Rendering \textit{physically based}, also möglichst physikalisch korrekt, durchzuführen. Aus diesem Grund sind hier viele grundlegenden Gleichungen der Optik implementiert und Phänomene werden so korrekt berechnet. Im Gegensatz dazu stehen Ray-tracer, welche für Animationsfilme oder Computerspiele genutzt werden. Hier soll das Endergebnis möglichst \textit{gut} aussehen, ohne unbedingt physikalisch korrekt zu sein. 
+
+\subsection{Lochkameramodell}
+
+\subsection{Verzerrung}
+
+\subsection{Verzerrungsmodelle}
+
+\subsection{Integrations der Verzerrung in den Raytracer}
+
+\input{01-2_warum_invertierung.tex}

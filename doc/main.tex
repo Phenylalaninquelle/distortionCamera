@@ -1,7 +1,7 @@
 \documentclass[11pt,a4paper,titlepage,svgnames]{article}
 \usepackage[a4paper]{geometry}
 \usepackage[utf8]{inputenc}
-\usepackage[english]{babel}
+\usepackage[german]{babel}
 \usepackage{lipsum}
 \usepackage{tikz}
 
@@ -102,8 +102,10 @@
 	{\let\newpage\relax\maketitle}
 	
 	\newpage
-
-	\input{distortion_model.tex}
+	\input{01_Theory.tex}
+	\input{02_Implementation.tex}
+	\input{03_Verification.tex}
+	\input{04_Discussion.tex}
 	
 	\bibliographystyle{plain}
 	\bibliography{quellen}
