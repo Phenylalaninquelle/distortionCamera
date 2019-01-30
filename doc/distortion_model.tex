@@ -50,8 +50,8 @@ Die Methode der kleinsten Quadrate (engl.: \emph{Least Squares}, kurz LS) stellt
 Sei $P = \{(x_1, y_1), (x_2, y_2), ..., (x_n, y_n)\}$ die Menge der bekannten Punkte mit $x_i, y_i \in R$. Man nimmt nun an, dass zwischen x und y ein funktionaler Zusammenhang bestehe, der durch $m$ reelle Parameter $a_j$ bestimmt wird. Damit lässt sich $y_i = f(x_i; \overrightarrow{a})$ schreiben, wobei $\overrightarrow{a} \in R^m$ die Parameter zusammenfasst. LS versucht nun, den unbekannten Parametervektor so zu ermitteln, dass die Summe der quadratischen Abweichungen $S^2$ minimiert wird:
 \begin{equation}
 \begin{split}
-\overrightarrow{a} = \argmin_{\overrightarrow{a} \in R^m} \{ S^2 \}, \quad
-S^2 =  \sum_{i=1}^{n} (y_i - f(x_i, \overrightarrow{a})^2)
+\overrightarrow{a} = \argmin_{\overrightarrow{a} \in R^M} \{ S^2 \}, \quad
+S^2 =  \sum_{i=1}^{N} (y_i - f(x_i, \overrightarrow{a}))^2
 \end{split}
 \label{eq:opt}
 \end{equation}
@@ -59,7 +59,6 @@ Setzt man für $f$ ein Polynom vom Grad $k$ an, so ist $m = k+1$ und
 %\begin{equation}
 \begin{gather}
 f(x_i, \overrightarrow{a}) = a_0 + a_1 x_i + \dots + a_k x_i^k = \sum_{j = 0}^{k} a_j x_i^j %\\
-%S^2 =\sum_{i = 1}^{n} (y_i - \sum_{j = 0}^{k} a_j x^j)^2
 \end{gather}
 %\end{equation}
 Für das Minimum müssen die partiellen Ableitungen nach allen Parametern null sein.
