@@ -4,6 +4,7 @@
 \usepackage[german]{babel}
 \usepackage{lipsum}
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta}
 
 \usepackage{amsmath, amssymb, amsfonts, amsthm, fouriernc, mathtools}
 % mathtools for: Aboxed (put box on last equation in align envirenment)
@@ -13,7 +14,8 @@
 \graphicspath{ {./pics/} {./eps/}}
 \usepackage{epsfig}
 \usepackage{epstopdf}
-
+\usepackage{csquotes}
+\MakeOuterQuote{"}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% COLOR DEFINITIONS
@@ -102,9 +104,14 @@
 	{\let\newpage\relax\maketitle}
 	
 	\newpage
+	\tableofcontents
+	\newpage
 	\input{01_Theory.tex}
+	\newpage
 	\input{02_Implementation.tex}
+	\newpage
 	\input{03_Verification.tex}
+	\newpage
 	\input{04_Discussion.tex}
 	
 	\bibliographystyle{plain}
