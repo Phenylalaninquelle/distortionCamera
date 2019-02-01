@@ -116,7 +116,7 @@ y_1 \\ y_2 \\ \vdots \\ y_n
 \end{gather}
 Sind alle $x_i$ paarweise voneinander verschieden, so ist $X^T X$ regulär. Damit ist das Problem unter dieser Bedingung immer eindeutig lösbar. Die Matrixgleichung \ref{eq:solution} kann somit numerisch oder direkt durch Finden von $(X^T X)^{-1}$ gelöst werden \cite{lsq_poly_wolfram}. In der Implementierung von \texttt{DistortionCamera} geschieht dies mittels LR-Zerlegung (beschrieben zum Beispiel in \cite{bronstein}).
 
-Ist also eine Funktion $f(x)$ gegeben, so kann durch Auswahl von $n$ paarweise unterschiedlichen Werten $x_i$ im Bereich $[0,1]$ die Menge $P = \{ (x_1, y_1), (x_2, y_2), \dots, (x_n, y_n) \}, \quad y_i = f(x_i)$ erzeugt werden. Um nun die inverse Funktion per LS anzunähern, tauscht man in den Paaren in $P$ nun jeweils $x_i$ und $y_i$ und führt dann das LS Verfahren wie oben beschrieben durch. Dies entspricht dem Optimierungsproblem
+Ist also eine Funktion $f(x)$ gegeben, so kann durch Auswahl von $n$ paarweise unterschiedlichen Werten $x_i$ im Bereich $[0,1]$ die Menge $P = \{ (x_1, y_1), (x_2, y_2), \dots, (x_n, y_n) \}, \quad y_i = f(x_i)$ erzeugt werden. Um nun die inverse Funktion $g(x) = f^{-1}(x)$ per LS anzunähern, tauscht man in den Paaren in $P$ nun jeweils $x_i$ und $y_i$ und führt dann das LS Verfahren wie oben beschrieben durch. Dies entspricht dem Optimierungsproblem
 \begin{equation}
 \begin{split}
 \overrightarrow{a} = \argmin_{\overrightarrow{a} \in R^m} \{ S^2 \}, \quad
@@ -125,30 +125,46 @@ S^2 =  \sum_{i=1}^{n} (x_i - f(y_i, \overrightarrow{a}))^2\quad.
 \end{equation}
 Im Vergleich zu Gleichung \ref{eq:opt} sind also die Rollen von $x_i$ und $y_i$ getauscht.
 
+\subsubsection{Anwenden des Modells}
+\label{subsubsec:anwenden}
+
+Sind die Parameter für $g$ bestimmt, kann damit $p_1$ aus $p_2$ bestimmt werden (vgl. Abbildung \ref{fig:model}). Da die implementierten Modelle rein radial arbeiten, muss zunächst der zu $p_2 = (x_1, y_2)$ gehörige Radius $r_2$ bestimmt werden (die Koordinaten sind hierbei und im folgenden die nach \ref{subsubsec:norm_radius} normalisierten Koordinaten):
+\begin{equation}
+r_2 = \sqrt{ (x_2 - x_{mitte})^2 + (y_2 - y_{mitte})^2 }
+\end{equation}
+Der Radius $r_1$ des Punktes $p_1$ wird dann mit 
+\begin{equation}
+r_1 = g(r_2)
+\end{equation}
+bestimmt. Zum Berechnen der Koordinaten von $p_1$ ist es hilfreich, einen radialen Einheitsvektor $\overrightarrow{e_r}$, der vom Bildmittelpunkt zum betrachteten Punkt $p_2$ zeigt, zu definieren:
+\begin{equation}
+\overrightarrow{e_r} = \begin{pmatrix} x_2 - x_{mitte} \\ y_2 - y_{mitte} \end{pmatrix} \cdot \frac{1}{r_2}
+\end{equation}
+Damit ergeben sich die Koordinaten von $p_1$ zu 
+\begin{equation}
+\begin{pmatrix} x_1 \\ y_1\\ \end{pmatrix} = 
+\begin{pmatrix} x_{mitte} \\ y_{mitte} \end{pmatrix} + 
+\overrightarrow{e_r} \cdot r_1 =
+\frac{r_1}{r_2} \cdot
+\begin{pmatrix} x_2 \\ y_2 \end{pmatrix} + 
+\begin{pmatrix} x_{mitte} \\ y_{mitte} \end{pmatrix} \cdot
+\frac{r_1}{r_2}
+\end{equation}
+
 \subsubsection{Umsetzung in C++}
-Die Implementierung von \texttt{DistortionCamera} ist in den Dateien \texttt{src/camera/distortion.h} und \texttt{src/camera/distortion.cpp} enthalten. \texttt{DistortionCamera} erbt dabei von \texttt{ProjectiveCamera}.
+Die Implementierung von \texttt{DistortionCamera} ist in den Dateien \texttt{distortion.h} und \linebreak \texttt{distortion.cpp} enthalten. \texttt{DistortionCamera} erbt dabei von \texttt{ProjectiveCamera} (siehe Abbildung \ref{fig:uml}).
 
 \begin{figure}[h]
-	\centering
-	\begin{tikzpicture}[scale=0.8]
-		\umlclass{pbrt::DistortionCamera}
-		{
-			+ <typedef> std::vector<pbrt::Float> coeffVec \\
-			+ \underline{std::unordered\_map<std::string, int> numCoeffsForModel}\\
-			- std::string distortionModel \\
-		 	- pbrt::Transform Normalize \\
-		 	- pbrt::Transform Denormalize \\
-		 	- coeffVec coeffs \\
-	 		- coeffVec fittedCoeffs
- 	 	}
-		{
-			+ DistortionCamera \\
-			+ Float GenerateRay \\
-			- coeffVec InvertDistortion
-			- pbrt::Point3f CalculateRayStartpoint \\
-		}
-	\end{tikzpicture}
-	\caption{Klasse \texttt{DistortionCamera} in UML-Darstellung}
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[height=.4\columnwidth]{uml_distortioncam}
+	\end{minipage}
+	\begin{minipage}{.5\textwidth}
+		\centering
+		\includegraphics[height=.4\columnwidth]{uml_classes}
+	\end{minipage}
+	\caption{UML-Darstellung von \texttt{DistortionCamera} (links) und Einordnung in die Klassenstruktur der vorhandenen Kameraklassen (rechts).}
+	\label{fig:uml}
 \end{figure}
 
 Im Konstruktor der Klasse wird zunächst eine Validierung des übergebenen Verzerrungsmodell durchgeführt. Ist kein Modell in der zu rendernden Szene definiert, so wird die inverse Verzerrungsfunktion zu $f(r) = r$ gesetzt. Das Rendering entspricht dann dem einer \texttt{PerspectiveCamera}. Anschließend wird überprüft, ob das übergebende Modell implementiert ist und die korrekte Anzahl an Koeffizienten übergeben wurde. Dies geschieht anhand der Variablen \texttt{numCoeffsForModel}.
@@ -181,7 +197,7 @@ for (int i = 0; i < sampleSize; i++) {
 coeffVec polyCoeffs = fitPolyCoeffs(y, x, polyDegree);
 \end{lstlisting}
 
-Zur Erzeugung des Strahls für ein vom Samples übergenes \texttt{CameraSample} wird dann \texttt{CalculateRayStartpoint} in \texttt{GenerateRay} aufgerufen. Die Funktion unterscheidet sich von ihrem Äquivalent in \texttt{PerspectiveCamera} nur durch die folgende Zeile:
+Zur Erzeugung des Strahls für ein vom Samples übergebenes \texttt{CameraSample} wird dann \texttt{CalculateRayStartpoint} in \texttt{GenerateRay} aufgerufen. \texttt{CalculateRayStartpoint} berechnet den Ausgangspunkt des Strahls für den im aktuellen \texttt{CameraSample} übergebenen Punkt auf dem Bildsensor, wie in \ref{subsubsec:anwenden} beschrieben. Die Funktion \texttt{GgenerateRay} unterscheidet sich von ihrem Äquivalent in \texttt{PerspectiveCamera} nur durch die folgende Zeile:
 \begin{lstlisting}
 Point3f pCamera = RasterToCamera(CalculateRayStartpoint(sample));
 \end{lstlisting}
