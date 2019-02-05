@@ -32,7 +32,24 @@
 \newcommand{\green}{\color{Turquoise} \usefont{OT1}{lmss}{m}{n}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\lstdefinestyle{customc++}{
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	frame=tb,
+	tabsize=2,
+	xleftmargin=\parindent,
+	language=C++,
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\bfseries\color{blue},
+	commentstyle=\itshape\color{orange},
+	identifierstyle=\color{black},
+	stringstyle=\color{orange},
+	backgroundcolor=\color{black!5},
+	numbers=left
+}
 
+\lstset{style=customc++}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
