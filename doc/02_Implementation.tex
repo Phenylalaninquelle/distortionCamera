@@ -4,12 +4,12 @@ Zur Simulation einer zuvor gemessenen Linsenverzerrung wurde in pbrt eine neue K
 
 \subsection{Verzerrungsmodelle in der Lensfun-Datenbank}
 
-Die in Lensfun implementierten Modelle bilden rein \emph{radiale} Linsenverzerrungen ab. Das heißt, dass nur Verschiebungen von bzw. zur optischen Achse der Kamera berücksichtigt werden, indem der unverzerrte Radius $r_u$ auf den verzerrten Radius $r_d$ abgebildet wird. Dazu wird eine Funktion $f:[0,1] \rightarrow R$ definiert\footnote{Der tatsächliche Wertebereich der Funktionen hängt von ihren Parametern ab (siehe \ref{subsubsec:modeldef}. Diese werden durch Messung an realen Kameras ermittelt. Typische Werte sorgen dafür, dass der Wertebereich zwischen 0 und 1 liegt, was im Kontext eines normierten Radius sinnvoll ist (siehe \ref{subsubsec:norm_radius}).}. Im allgemeinen können Linsenverzerrungen auch tangentiale Komponenten enthalten, für deren Nachbildung dann komplexere Modelle nötig sind.
+Die in Lensfun implementierten Modelle bilden rein \emph{radiale} Linsenverzerrungen ab, wie in Abschnitt \ref{subsec:verzerrungsmodelle} beschrieben. Dazu wird eine Funktion $f:[0,1] \rightarrow R$ definiert\footnote{Der tatsächliche Wertebereich der Funktionen hängt von ihren Parametern ab (siehe \ref{subsubsec:modeldef}). Diese werden durch Messung an realen Kameras ermittelt. Typische Werte sorgen dafür, dass der Wertebereich zwischen 0 und 1 liegt, was im Kontext eines normierten Radius sinnvoll ist (siehe \ref{subsubsec:norm_radius}).}, die den unverzerrten Radius auf den verzerrten Radius abbildet. Dabei wird in einem normalisierten Koordidatensystem gearbeitet.
 
 \subsubsection{Koordinatensystem und Normalisierung}
 \label{subsubsec:norm_radius}
 
-Der Radius wird definiert als der normierte Abstand vom Bildmittelpunkt. Dieser wird standardmäßig als $p_m = (\frac{x_{res}}{2}, \frac{y_{res}}{2})$ angenommen\footnote{In der Datenbank kann auch eine gemessene Abweichung von diesem "idealen" Bildmittelpunkt angegeben werden. Davon wird allerdings in der gesamten Datenbank, die (Stand 31.01.2019) über 600 Modelle umfasst, nur ein einziges Mal Gebrauch gemacht.}, wobei $x_{res}$ und $y_{res}$ die Bildauflösung in x- bzw. y-Richtung bezeichnen. Die Normierung erfolgt dann so, dass die halbe Bilddiagonale die Länge eins hat. Da diese den größten Radius im Bild darstellt, ist dadurch immer $r \in [0,1]$ (siehe Abbildung \ref{fig:norm}). 
+Der Radius wird definiert als der normierte Abstand vom Bildmittelpunkt. Dieser wird standardmäßig als $p_m = (\frac{x_{res}}{2}, \frac{y_{res}}{2})$ angenommen\footnote{In der Datenbank kann auch eine gemessene Abweichung von diesem "idealen" Bildmittelpunkt angegeben werden. Davon wird allerdings in der gesamten Datenbank, die (Stand 31.01.2019) über 600 Modelle umfasst, nur ein einziges Mal Gebrauch gemacht.}, wobei $x_{res}$ und $y_{res}$ die Bildauflösung in x- bzw. y-Richtung bezeichnen. Die Normierung erfolgt dann so, dass die halbe Bilddiagonale $r_e$ die Länge eins hat. Da diese den größten Radius im Bild darstellt, ist dadurch immer $r \in [0,1]$ (siehe Abbildung \ref{fig:norm}). 
 
 \begin{figure}[h]
 	\centering
@@ -40,35 +40,38 @@ Der Radius wird definiert als der normierte Abstand vom Bildmittelpunkt. Dieser 
 
 Die Transformation von Pixelkoordinaten zu normalisierten Koordinaten besteht einfach in einer Division durch $r_e$. Dies lässt sich einfach nachvollziehen, indem der Radius (in Pixelkoordinaten) für einen der Eckpunkte berechnet wird:
 \begin{equation}
-	r_d = \sqrt{(x_{eck} - x_{mitte})^2 + (y_{eck} - y_{mitte})^2} = \sqrt{\overline{x}^2 + \overline{y}^2}
+	r_e = \sqrt{(x_{eck} - x_{mitte})^2 + (y_{eck} - y_{mitte})^2} = \sqrt{\overline{x}^2 + \overline{y}^2}
 \end{equation}
 Skaliert man nun alle Koordinaten mit einem Faktor $k$, so ist der skalierte Eckenradius
 \begin{equation}
 	r_s = \sqrt{(k \overline{x})^2 + (k \overline{y})^2} = \sqrt{k^2 (\overline{x}^2 + \overline{y}^2)} = k r_e.
 \end{equation}
-Demnach ist $r_s = 1$ für $k = \frac{1}{r_e}$.
+Um $r_s = 1$ zu erfüllen, muss dann $k = \frac{1}{r_e}$ gelten.
 
+\newpage
 \subsubsection{Modelldefinitionen}\label{sec:Modeldefinitions}
 \label{subsubsec:modeldef}
 
-Im folgenden steht $r_u$ immer für den normierten unverzerrten Bildradius, der durch eine Verzerrungsfunktion $f$ auf den verzerrten Radius $r_d$ abgebildet wird. Diese Bezeichnungen und die Definitionen der Verzerrungsfunktionen sind der Dokumentation von Lensfun entnommen \cite{lensfun}.
+Im Folgenden steht $r_u$ immer für den normierten unverzerrten Bildradius, der durch eine Verzerrungsfunktion $f$ auf den verzerrten Radius $r_d$ abgebildet wird. Diese Bezeichnungen und die Definitionen der Verzerrungsfunktionen sind der Dokumentation von Lensfun entnommen \cite{lensfun}.
 
-\textbf{Poly3:} Das Poly3-Modell besteht aus einem Polynom dritter Ordnung mit einem Parameter $k_1$. Es ist unabhängig von $k_1$ immer $f(0) = 0$ und $f(1) = 1$. Dadurch, dass nur ein Parameter vorhanden ist, eignet sich das Modell vornehmlich zur Modellierung weniger komplexer Verzerrungen.
+\textbf{Poly3:} Das Poly3-Modell besteht aus einem Polynom dritter Ordnung mit einem Parameter $k_1$. Es gilt unabhängig von $k_1$ immer $f(0) = 0$ und $f(1) = 1$. Dadurch, dass nur ein Parameter vorhanden ist, eignet sich das Modell vornehmlich zur Modellierung weniger komplexer Verzerrungen.
 \begin{equation}
 	f_{poly3}(r_u) = r_u \cdot (1 - k_1 + k_1 r_u^2)
 \end{equation}
+
 \textbf{Poly5:} Dieses Modell verwendet ein Polynom fünfter Ordnung und kann dadurch komplexere Verzerrungen nachbilden als das Poly3-Modell. Es wird dafür ein weiterer Parameter benötigt. Anders als beim Poly3-Modell ist hier nicht $f(1) = 1$ garantiert.
 \begin{equation}
 	f_{poly5}(r_u) = r_u \cdot (1 + k_1 r_u^2 + k_2 r_u^4)
 \end{equation}
-\textbf{PTLens:} Diese Modell wurde aus der PTLens-Datenbank, auf der das Lensfun-Projekt aufbaut, übernommen. Das Modell besteht aus einem Polynom vierter Ordnung, mit drei Parametern $a,b,c$ und ist so aufgebaut, dass wieder die Normierung $f(1) = 1$ gilt.
+
+\textbf{PTLens:} Dieses Modell wurde aus der PTLens-Datenbank, auf der das Lensfun-Projekt aufbaut, übernommen. Das Modell besteht aus einem Polynom vierter Ordnung, mit drei Parametern $a,b,c$ und ist so aufgebaut, dass wieder die Normierung $f(1) = 1$ gilt.
 \begin{equation}
 	f_{ptlens}(r_u) = r_u \cdot (a r_u^3 + b r_u^2 + c r_u + 1 - a - b - c)
 \end{equation}
 
 \subsection{Implementierung}
 
-Die Klasse \texttt{DistortionCamera} implementiert die Linsenverzeichnung. Dabei werden die Richtungen der ausgesandten Strahlen relativ zum "Referenzmodell Lochkamera" modifiziert, sodass die Verzeichnung durch die unperfekte Linse im gerenderten Bild sichtbar wird. Der Raytracer ruft zum Erzeugen der Strahlen für das Rendern eines Bildes die Klassenmethode \texttt{GenerateRay} auf. Dies passiert für jeden Pixel des zu erzeugenden Bildes mindestens einmal\footnote{Der verwendete Sampler gibt vor, wie häufig und auf welche Art und Weise für ein Pixel Strahlen generiert werden.}. Die Berechnung der Strahlrichtung in Abhängigkeit der betrachteten Pixelkoordinaten erfolgt also in \texttt{GenerateRay}.
+Die Klasse \texttt{DistortionCamera} implementiert die Linsenverzeichnung. Dabei werden die Richtungen der ausgesandten Strahlen relativ zum "Referenzmodell Lochkamera" modifiziert, sodass die Verzeichnung durch die unperfekte Linse im gerenderten Bild sichtbar wird (vgl. Abschnitt \ref{sec:DistortionRaytracer}). Der Raytracer ruft zum Erzeugen der Strahlen die Methode \texttt{GenerateRay} auf. Dies passiert für jeden Pixel des zu erzeugenden Bildes mindestens einmal\footnote{Der verwendete Sampler gibt vor, wie häufig und auf welche Art und Weise für ein Pixel Strahlen generiert werden.}. Die Berechnung der Strahlrichtung in Abhängigkeit der betrachteten Pixelkoordinaten erfolgt also in \texttt{GenerateRay}.
 
 Damit ergibt sich für die Implementierung die Anforderung, dass bei einer vorgegebenen Verzerrungsfunktion $f$ vor Beginn des Renderings die inverse Funktion bestimmt werden muss. Da für die in der Lensfun-Datenbank verwendeten Modelle keine einfache analytische Inverse gefunden werden kann, wird ein numerischer Ansatz verfolgt. Dazu werden zunächst Werte von $f$ für eine Reihe von $r_i$ im erlaubten Bereich bestimmt. Die Inverse wird dann als Polynom mittels des Least Squares Verfahrens angenähert.
 
@@ -81,7 +84,7 @@ Die Methode der kleinsten Quadrate (engl.: \emph{Least Squares}, kurz LS) stellt
 Sei $P = \{(x_1, y_1), (x_2, y_2), ..., (x_n, y_n)\}$ die Menge der bekannten Punkte mit $x_i, y_i \in R$. Man nimmt nun an, dass zwischen x und y ein funktionaler Zusammenhang bestehe, der durch $m$ reelle Parameter $a_j$ bestimmt wird. Damit lässt sich $y_i = f(x_i; \overrightarrow{a})$ schreiben, wobei $\overrightarrow{a} \in R^m$ die Parameter zusammenfasst. LS versucht nun, den unbekannten Parametervektor so zu ermitteln, dass die Summe der quadratischen Abweichungen $S^2$ minimiert wird:
 \begin{equation}
 \begin{split}
-\overrightarrow{a} = \argmin_{\overrightarrow{a} \in R^M} \{ S^2 \}, \quad
+\overrightarrow{a} \in \argmin_{\overrightarrow{a} \in R^M} \{ S^2 \}, \quad
 S^2 =  \sum_{i=1}^{N} (y_i - f(x_i, \overrightarrow{a}))^2
 \end{split}
 \label{eq:opt}
@@ -116,10 +119,10 @@ y_1 \\ y_2 \\ \vdots \\ y_n
 \end{gather}
 Sind alle $x_i$ paarweise voneinander verschieden, so ist $X^T X$ regulär. Damit ist das Problem unter dieser Bedingung immer eindeutig lösbar. Die Matrixgleichung \ref{eq:solution} kann somit numerisch oder direkt durch Finden von $(X^T X)^{-1}$ gelöst werden \cite{lsq_poly_wolfram}. In der Implementierung von \texttt{DistortionCamera} geschieht dies mittels LR-Zerlegung (beschrieben zum Beispiel in \cite{bronstein}).
 
-Ist also eine Funktion $f(x)$ gegeben, so kann durch Auswahl von $n$ paarweise unterschiedlichen Werten $x_i$ im Bereich $[0,1]$ die Menge $P = \{ (x_1, y_1), (x_2, y_2), \dots, (x_n, y_n) \}, \quad y_i = f(x_i)$ erzeugt werden. Um nun die inverse Funktion $g(x) = f^{-1}(x)$ per LS anzunähern, tauscht man in den Paaren in $P$ nun jeweils $x_i$ und $y_i$ und führt dann das LS Verfahren wie oben beschrieben durch. Dies entspricht dem Optimierungsproblem
+Ist also eine Funktion $f(x)$ gegeben, so kann durch Auswahl von $n$ paarweise unterschiedlichen Werten $x_i$ im Bereich $[0,1]$ die Menge $P = \{ (x_1, y_1), (x_2, y_2), \dots, (x_n, y_n) \}, \quad y_i = f(x_i)$ erzeugt werden. Um nun die inverse Funktion $g(x) = f^{-1}(x)$ per LS anzunähern, tauscht man in den Paaren in $P$ jeweils $x_i$ und $y_i$ und führt dann das LS Verfahren wie oben beschrieben durch. Dies entspricht dem Optimierungsproblem
 \begin{equation}
 \begin{split}
-\overrightarrow{a} = \argmin_{\overrightarrow{a} \in R^m} \{ S^2 \}, \quad
+\overrightarrow{a} \in \argmin_{\overrightarrow{a} \in R^m} \{ S^2 \}, \quad
 S^2 =  \sum_{i=1}^{n} (x_i - f(y_i, \overrightarrow{a}))^2\quad.
 \end{split}
 \end{equation}
@@ -128,7 +131,7 @@ Im Vergleich zu Gleichung \ref{eq:opt} sind also die Rollen von $x_i$ und $y_i$ 
 \subsubsection{Anwenden des Modells}
 \label{subsubsec:anwenden}
 
-Sind die Parameter für $g$ bestimmt, kann damit $p_1$ aus $p_2$ bestimmt werden (vgl. Abbildung \ref{fig:model}). Da die implementierten Modelle rein radial arbeiten, muss zunächst der zu $p_2 = (x_1, y_2)$ gehörige Radius $r_2$ bestimmt werden (die Koordinaten sind hierbei und im folgenden die nach \ref{subsubsec:norm_radius} normalisierten Koordinaten):
+Sind die Parameter für $g$ bestimmt, kann damit $p_1$ aus $p_2$ bestimmt werden (vgl. Abbildung \ref{fig:model}). Da die implementierten Modelle rein radial arbeiten, muss zunächst zu $p_2 = (x_2, y_2)$ der Radius $r_2$ bestimmt werden (die Koordinaten sind hierbei und im Folgenden die nach \ref{subsubsec:norm_radius} normalisierten Koordinaten):
 \begin{equation}
 r_2 = \sqrt{ (x_2 - x_{mitte})^2 + (y_2 - y_{mitte})^2 }
 \end{equation}
@@ -167,17 +170,33 @@ Die Implementierung von \texttt{DistortionCamera} ist in den Dateien \texttt{dis
 	\label{fig:uml}
 \end{figure}
 
-Im Konstruktor der Klasse wird zunächst eine Validierung des übergebenen Verzerrungsmodell durchgeführt. Ist kein Modell in der zu rendernden Szene definiert, so wird die inverse Verzerrungsfunktion zu $f(r) = r$ gesetzt. Das Rendering entspricht dann dem einer \texttt{PerspectiveCamera}. Anschließend wird überprüft, ob das übergebende Modell implementiert ist und die korrekte Anzahl an Koeffizienten übergeben wurde. Dies geschieht anhand der Variablen \texttt{numCoeffsForModel}.
+Im Konstruktor der Klasse wird zunächst eine Validierung des übergebenen Verzerrungsmodell durchgeführt. Ist kein Modell in der zu rendernden Szene definiert, so wird die inverse Verzerrungsfunktion zu $f(r) = r$ gesetzt. Das Rendering entspricht dann dem einer \texttt{PerspectiveCamera}. Anschließend wird überprüft, ob das übergebende Modell implementiert ist und die korrekte Anzahl an Koeffizienten übergeben wurde. Dies geschieht anhand der Variablen \texttt{numCoeffsForModel}. Sind die Eingabeparameter korrekt, wird per LS die inverse Verzerrungsfunktion angenähert.
 \begin{lstlisting}[caption={Validierung der übergebenen Modellparameter}]
-auto modelIter = numCoeffsForModel.find(distortionModel);
-if (modelIter == numCoeffsForModel.end())
-	/* print out error and abort rendering */
+/* ------------ Validate given model ---------------------------*/
+if (distortionModel == NO_MODEL) {
+	// set coefficients to render like PerspectiveCamera	
+}
+else {
+	auto modelIter = numCoeffsForModel.find(distortionModel);
+	if (modelIter == numCoeffsForModel.end()) {
+		// set coefficients to render like PerspectiveCamera
+	}
+	else {
+		int requiredNum = modelIter->second;
+		int givenNum = coeffs.size();
+		if (givenNum >= requiredNum) {
+			// set coeffs to the first <requiredNum> coefficients
+		}
+		else if (givenNum <= requiredNum) {
+			// append zeros to coeffs
+		}
+		fittedCoeffs = InvertDistortion(coeffs, POLY_DEGREE);
+	}
+}
 \end{lstlisting}
-Sind die Eingabeparameter korrekt, wird per LS die inverse Verzerrungsfunktion angenähert.
-\begin{lstlisting}[caption={Bestimmen den Koeffizienten für $g$}]
-fittedCoeffs = InvertDistortion(coeffs, POLY_DEGREE);
-\end{lstlisting}
-Außerdem wird im Konstruktor noch die Transformation \texttt{Normalize} definiert (siehe \ref{subsubsec:norm_radius} sowie die dazugehörige inverse Transformation \texttt{Denormalize}.
+
+Außerdem wird im Konstruktor die Transformation \texttt{Normalize} definiert (siehe \ref{subsubsec:norm_radius} sowie die dazugehörige inverse Transformation \texttt{Denormalize}.
+\newpage
 \begin{lstlisting}[caption={Transformation zur Normalisierung der Pixelkoordinten}]
 /* -------- Define transformations for ray generation --------*/
 Float xRes = film->fullResolution.x;
@@ -187,7 +206,7 @@ NormalizeToCornerRadius = Scale(1. / cornerRadius, 1. / cornerRadius, 1.);
 Denormalize = Inverse(NormalizeToCornerRadius);
 \end{lstlisting}
 
-Zum Auffinden der inversen Verzerrungsfunktion ist in \texttt{distortion.h} die Funktion \texttt{fitPolyCoeffs} implementiert. Diese setzt das Least Squares Verfahren wie in Abschnitt \ref{subsubsec:least} beschrieben um. Für die Matrizenoperationen wird auf Funktionen aus der Boost-Bibliothek zurückgegriffen. Boost ist eine Sammlung von Open Source C++-Blibliotheken \cite{boost}. In diesem Fall wird die Unterbibliothek \texttt{Boost::numeric::uBLAS} verwendet \cite{ublas}. BLAS steht dabei für "Basic Linear Algebra Subprograms", was Inhalt und Zielsetzung der Bibliothek gut zusammenfasst. Zusätzlich ist eine Funktion \texttt{evalPolynomial} vorhanden, die für einen gegebenen Satz an $m$ Polynomkoeffizienten $a_i$ und einen Wert $x \in R$ die Funktion $y = a_0 + a_1 x + a_2 x^2 + \dots + a_{m-1} x^{m-1}$ berechnet. In \texttt{InvertDistortion} wird die übergebene Verzerrrungsfunktion abgetastet und anschließend der Koeffizientenvektor der inversen Funktion genähert.
+Zum Finde der inversen Verzerrungsfunktion ist in \texttt{distortion.h} die Funktion \texttt{fitPolyCoeffs} implementiert. Diese setzt das Least Squares Verfahren wie in Abschnitt \ref{subsubsec:least} beschrieben um. Für die Matrizenoperationen wird auf Funktionen aus der Boost-Bibliothek zurückgegriffen. Boost ist eine Sammlung von Open Source C++-Bibliotheken \cite{boost}. In diesem Fall wird die Unterbibliothek \texttt{Boost::numeric::uBLAS} verwendet \cite{ublas}. BLAS steht dabei für "Basic Linear Algebra Subprograms", was Inhalt und Zielsetzung der Bibliothek gut zusammenfasst. Zusätzlich ist eine Funktion \texttt{evalPolynomial} vorhanden, die für einen gegebenen Satz an $m$ Polynomkoeffizienten $a_i$ und einen Wert $x \in R$ die Funktion $y = a_0 + a_1 x + a_2 x^2 + \dots + a_{m-1} x^{m-1}$ berechnet. In \texttt{InvertDistortion} wird die übergebene Verzerrrungsfunktion abgetastet und anschließend der Koeffizientenvektor der inversen Funktion genähert.
 \begin{lstlisting}[caption={"Abtasten" des Verzerrungsmodells und Invertierung}]
 // fill sample vector according to the model used
 for (int i = 0; i < sampleSize; i++) {
@@ -197,9 +216,17 @@ for (int i = 0; i < sampleSize; i++) {
 coeffVec polyCoeffs = fitPolyCoeffs(y, x, polyDegree);
 \end{lstlisting}
 
-Zur Erzeugung des Strahls für ein vom Samples übergebenes \texttt{CameraSample} wird dann \texttt{CalculateRayStartpoint} in \texttt{GenerateRay} aufgerufen. \texttt{CalculateRayStartpoint} berechnet den Ausgangspunkt des Strahls für den im aktuellen \texttt{CameraSample} übergebenen Punkt auf dem Bildsensor, wie in \ref{subsubsec:anwenden} beschrieben. Die Funktion \texttt{GgenerateRay} unterscheidet sich von ihrem Äquivalent in \texttt{PerspectiveCamera} nur durch die folgende Zeile:
+Zur Erzeugung des Strahls für ein vom Sampler übergebenes \texttt{CameraSample} wird dann \texttt{CalculateRayStartpoint} in \texttt{GenerateRay} aufgerufen. \texttt{CalculateRayStartpoint} berechnet den Ausgangspunkt des Strahls für den im aktuellen \texttt{CameraSample} übergebenen Punkt auf dem Bildsensor, wie in \ref{subsubsec:anwenden} beschrieben. Die Funktion \texttt{GenerateRay} unterscheidet sich von ihrem Äquivalent in \texttt{PerspectiveCamera} nur durch die folgende Zeile:
 \begin{lstlisting} [caption={Anpassung in der Methode \texttt{GenerateRay}}]
 Point3f pCamera = RasterToCamera(CalculateRayStartpoint(sample));
 \end{lstlisting}
 
-Neben dieser eigentlichen Implementierung der neuen Kameraklasse waren noch geringe Anpassungen nötig, um das Erzeugen einer \texttt{DistortionCamera} aus einer \texttt{.pbrt}-Datei heraus zu ermöglichen. Diese betrafen die Funktion \texttt{MakeCamera} in \texttt{/src/core/api.cpp}. Außerdem musste die neue Abhängigkeit von der Boost-Bibliothek in \texttt{CMakeLists.txt} eingepflegt werden.
+Neben dieser eigentlichen Implementierung der neuen Kameraklasse waren noch geringe Anpassungen nötig, um die Parameter für \texttt{DistortionCamera} aus einer \texttt{.pbrt}-Datei zu parsen. Diese betrafen die Funktion \texttt{MakeCamera} in \texttt{/src/core/api.cpp}. Außerdem musste die neue Abhängigkeit von der Boost-Bibliothek in \texttt{CMakeLists.txt} eingepflegt werden.
+
+Soll in Zukunft ein neues Verzerrungsmodell in die Klasse eingebaut werden, so sind folgende Punkte zu erledigen:
+\begin{itemize}
+	\item Mögliche neue Parameter müssen in der Funktion \texttt{MakeCamera} aus der Szenenbeschreibung geparsed werden und im Konstruktor von \texttt{DistortionCamera} hinzugefügt werden.
+	\item Der Name des neuen Modells und die benötigte Anzahl von Koeffizienten müssen in der Variablen \texttt{numCoeffsForModel} hinzugefügt werden.
+	\item Eine Funktion, die die Modellberechnung durchführt muss implementiert werden. Die bisherigen Modellfunktionen sind als \texttt{inline} Funktionen in \texttt{distortion.h} implementiert worden.
+	\item Schließlich muss die Modellfunktion in \texttt{InvertDistortion} ausgewählt werden, wenn das neue Modell übergeben wird.
+\end{itemize}
