@@ -4,7 +4,7 @@ Zur Simulation einer zuvor gemessenen Linsenverzerrung wurde in pbrt eine neue K
 
 \subsection{Verzerrungsmodelle in der Lensfun-Datenbank}
 
-Die in Lensfun implementierten Modelle bilden rein \emph{radiale} Linsenverzerrungen ab. Das heißt, dass nur Verschiebungen von bzw. zur optischen Achse der Kamera berücksichtigt werden, indem der unverzerrte Radius $r_u$ auf den verzerrten Radius $r_d$ angebildet wird. Dazu wird eine Funktion $f:[0,1] \rightarrow R$ definiert\footnote{Der tatsächliche Wertebereich der Funktionen hängt von ihren Parametern ab (siehe \ref{subsubsec:modeldef}. Diese werden durch Messung an realen Kameras ermittelt. Typische Werte sorgen dafür, dass der Wertebereich zwischen 0 und 1 liegt, was im Kontext eines normierten Radius sinnvoll ist (siehe \ref{subsubsec:norm_radius}).}. Im allgemeinen können Linsenverzerrungen auch tangentiale Komponenten enthalten, für deren Nachbildung dann komplexere Modelle nötig sind.
+Die in Lensfun implementierten Modelle bilden rein \emph{radiale} Linsenverzerrungen ab. Das heißt, dass nur Verschiebungen von bzw. zur optischen Achse der Kamera berücksichtigt werden, indem der unverzerrte Radius $r_u$ auf den verzerrten Radius $r_d$ abgebildet wird. Dazu wird eine Funktion $f:[0,1] \rightarrow R$ definiert\footnote{Der tatsächliche Wertebereich der Funktionen hängt von ihren Parametern ab (siehe \ref{subsubsec:modeldef}. Diese werden durch Messung an realen Kameras ermittelt. Typische Werte sorgen dafür, dass der Wertebereich zwischen 0 und 1 liegt, was im Kontext eines normierten Radius sinnvoll ist (siehe \ref{subsubsec:norm_radius}).}. Im allgemeinen können Linsenverzerrungen auch tangentiale Komponenten enthalten, für deren Nachbildung dann komplexere Modelle nötig sind.
 
 \subsubsection{Koordinatensystem und Normalisierung}
 \label{subsubsec:norm_radius}
@@ -48,7 +48,7 @@ Skaliert man nun alle Koordinaten mit einem Faktor $k$, so ist der skalierte Eck
 \end{equation}
 Demnach ist $r_s = 1$ für $k = \frac{1}{r_e}$.
 
-\subsubsection{Modelldefinitionen}
+\subsubsection{Modelldefinitionen}\label{sec:Modeldefinitions}
 \label{subsubsec:modeldef}
 
 Im folgenden steht $r_u$ immer für den normierten unverzerrten Bildradius, der durch eine Verzerrungsfunktion $f$ auf den verzerrten Radius $r_d$ abgebildet wird. Diese Bezeichnungen und die Definitionen der Verzerrungsfunktionen sind der Dokumentation von Lensfun entnommen \cite{lensfun}.
