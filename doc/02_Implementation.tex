@@ -69,7 +69,7 @@ Im Folgenden steht $r_u$ immer für den normierten unverzerrten Bildradius, der 
 	f_{ptlens}(r_u) = r_u \cdot (a r_u^3 + b r_u^2 + c r_u + 1 - a - b - c)
 \end{equation}
 
-\subsection{Implementierung}
+\subsection{Implementierung}\label{subsec:implementation}
 
 Die Klasse \texttt{DistortionCamera} implementiert die Linsenverzeichnung. Dabei werden die Richtungen der ausgesandten Strahlen relativ zum "Referenzmodell Lochkamera" modifiziert, sodass die Verzeichnung durch die unperfekte Linse im gerenderten Bild sichtbar wird (vgl. Abschnitt \ref{sec:DistortionRaytracer}). Der Raytracer ruft zum Erzeugen der Strahlen die Methode \texttt{GenerateRay} auf. Dies passiert für jeden Pixel des zu erzeugenden Bildes mindestens einmal\footnote{Der verwendete Sampler gibt vor, wie häufig und auf welche Art und Weise für ein Pixel Strahlen generiert werden.}. Die Berechnung der Strahlrichtung in Abhängigkeit der betrachteten Pixelkoordinaten erfolgt also in \texttt{GenerateRay}.
 
