@@ -1,4 +1,5 @@
-\section{Verifizierung}
+\newpage
+\section{Verifizierung und Ergebnisse}
 \subsection{Planung}
 Zur Verifizierung der in C++ implementierten Verzerrung, wurde ein Auswertungsskript in MATLAB erstellt. Die Grundidee der Verifizierung ist, dass für einfache Szenen die Verzerrung des Bildes durch Änderung des verfolgten Lichtstrahls, ungefähr äquivalent mit der Interpolation eines unverzerrten Bildes, gerendert durch die \texttt{PerspectiveCamera} des PBRT, sein sollte.
 Dies wird auf zwei Arten überprüft:
@@ -103,7 +104,7 @@ Die Basis des folgenden Vergleiches bildet eine Reihe von gerenderten Verzerrung
 	\item[Bildmittelpunkt-Offset] $X$: $0$, $Y$: $0.5$
 	\item[Koeffizient $k_1$] Von $k_1 = 0.0125$ wiederholt verdoppelt bis $k_1 = 0.4$.
 \end{description}
-Sowohl das Testbild aus Abbildung~\ref{fig:test_img}, die gerenderten Testbilder und die daraus in Matlab entstandenen Bilder sind im dieser Arbeit zugehörigen Git-Repository zu finden. Beispiele sind in Abbildung~\ref{fig:rendered_examples} zu sehen.
+Sowohl das Testbild aus Abbildung~\ref{fig:test_img}, die gerenderten Testbilder und die daraus in Matlab entstandenen Bilder sind im dieser Arbeit zugehörigen Git-Repository \cite{git-Distortion_Camera} zu finden. Beispiele sind in Abbildung~\ref{fig:rendered_examples} zu sehen.
 \begin{figure}[h]
 	\centering
 	\begin{minipage}{.3\textwidth}
