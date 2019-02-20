@@ -62,7 +62,6 @@ berechnet werden.
 	\label{fig:norm}
 \end{figure}
 
-<<<<<<< HEAD
 Die Transformation von Pixelkoordinaten zu normalisierten Koordinaten besteht einfach in einer Division durch $r_e$. Dies lässt sich einfach nachvollziehen, indem der Radius (in Pixelkoordinaten) für einen der Eckpunkte berechnet wird:
 \begin{equation}
 	r_e = \sqrt{(x_{eck} - x_{mitte})^2 + (y_{eck} - y_{mitte})^2} = \sqrt{\overline{x}^2 + \overline{y}^2}
@@ -85,8 +84,7 @@ x_{a,pixel} \\ y_{a,pixel}
 \end{equation} 
 berechnet werden.
 
-=======
->>>>>>> 46086d2b145640cc29c1a44853b3fd2213cffa29
+
 \newpage
 \subsubsection{Modelldefinitionen}\label{sec:Modeldefinitions}
 \label{subsubsec:modeldef}
@@ -209,21 +207,10 @@ Die Implementierung von \texttt{DistortionCamera} ist in den Dateien \texttt{dis
 	\label{fig:uml}
 \end{figure}
 
-<<<<<<< HEAD
-Im Konstruktor der Klasse wird zunächst eine Validierung des übergebenen Verzerrungsmodells durchgeführt. Ist kein Modell in der zu rendernden Szene definiert, so wird die inverse Verzerrungsfunktion zu $f(r) = r$ gesetzt. Das Rendering entspricht dann dem einer \texttt{PerspectiveCamera}. Anschließend wird überprüft, ob das zu übergebende Modell implementiert ist und die korrekte Anzahl an Koeffizienten übergeben wurde. Dies geschieht anhand der Variablen \texttt{numCoeffsForModel}. Sind die Eingabeparameter korrekt, wird per LS die inverse Verzerrungsfunktion angenähert.
 
-%\begin{figure}
-%	\centering
-%	\includegraphics[scale=0.75]{flowchart}
-%	\caption{Validierung des übergebenen Modells}
-%\end{figure}
-
-Außerdem wird im Konstruktor die Transformation \texttt{Normalize} definiert (siehe \ref{subsubsec:norm_radius}), sowie die dazugehörige inverse Transformation \texttt{Denormalize}.
-\newpage
-=======
 Im Konstruktor der Klasse wird zunächst eine Validierung des übergebenen Verzerrungsmodell durchgeführt. Ist kein Modell in der zu rendernden Szene definiert, so wird die inverse Verzerrungsfunktion zu $f(r) = r$ gesetzt. Das Rendering entspricht dann dem einer \texttt{PerspectiveCamera}. Anschließend wird überprüft, ob das übergebende Modell implementiert ist und die korrekte Anzahl an Koeffizienten übergeben wurde. Dies geschieht anhand der Variablen \texttt{numCoeffsForModel}. Sind die Eingabeparameter korrekt, wird per LS die inverse Verzerrungsfunktion angenähert. Da alle implementierten Modelle Polynome höchstens fünften Grades darstellen, wird zur Näherung ein Polynom fünften Grades verwendet. 
-Desweiteren wird im Konstruktor die Transformation \texttt{Normalize} (siehe \ref{subsubsec:norm_radius} sowie die dazugehörige inverse Transformation \texttt{Denormalize} definiert. Diese setzen die in Abschnitt \ref{subsubsec:norm_radius} beschriebenen Normalisierung der Pixelkoordinaten um.
->>>>>>> 46086d2b145640cc29c1a44853b3fd2213cffa29
+Des Weiteren wird im Konstruktor die Transformation \texttt{Normalize} (siehe \ref{subsubsec:norm_radius} sowie die dazugehörige inverse Transformation \texttt{Denormalize} definiert. Diese setzen die in Abschnitt \ref{subsubsec:norm_radius} beschriebenen Normalisierung der Pixelkoordinaten um.
+
 \begin{lstlisting}[caption={Transformation zur Normalisierung der Pixelkoordinaten}]
 /* -------- Define transformations for ray generation --------*/
 Float xRes = film->fullResolution.x;
@@ -233,13 +220,11 @@ NormalizeToCornerRadius = Scale(1. / cornerRadius, 1. / cornerRadius, 1.);
 Denormalize = Inverse(NormalizeToCornerRadius);
 \end{lstlisting}
 
-<<<<<<< HEAD
+
 Zum Bestimmen der inversen Verzerrungsfunktion ist in \texttt{distortion.h} die Funktion \texttt{fitPolyCoeffs} implementiert. Diese setzt das Least Squares Verfahren wie in Abschnitt \ref{subsubsec:least} beschrieben um.
 
 Für die Matrizenoperationen wird auf Funktionen aus der Boost-Bibliothek zurückgegriffen. Boost ist eine Sammlung von Open Source C++-Bibliotheken \cite{boost}. In diesem Fall wird die Unterbibliothek \texttt{Boost::numeric::uBLAS} verwendet \cite{ublas}. BLAS steht dabei für "Basic Linear Algebra Subprograms", was Inhalt und Zielsetzung der Bibliothek gut zusammenfasst. Zusätzlich ist eine Funktion \texttt{evalPolynomial} vorhanden, die für einen gegebenen Satz an $m$ Polynomkoeffizienten $a_i$ und einen Wert $x \in R$ die Funktion $y = a_0 + a_1 x + a_2 x^2 + \dots + a_{m-1} x^{m-1}$ berechnet. In \texttt{InvertDistortion} wird die übergebene Verzerrungsfunktion abgetastet und anschließend der Koeffizientenvektor der inversen Funktion genähert.
-=======
-Zum Bestimmen der inversen Verzerrungsfunktion ist in \texttt{distortion.h} die Funktion \texttt{fitPolyCoeffs} implementiert. Diese setzt das Least Squares Verfahren wie in Abschnitt \ref{subsubsec:least} beschrieben um. Für die Matrizenoperationen wird auf Funktionen aus der Boost-Bibliothek zurückgegriffen. Boost ist eine Sammlung von Open Source C++-Bibliotheken~\cite{boost}. In diesem Fall wird die Unterbibliothek \texttt{Boost::numeric::uBLAS} verwendet \cite{ublas}. BLAS steht dabei für "Basic Linear Algebra Subprograms", was Inhalt und Zielsetzung der Bibliothek gut zusammenfasst. Zusätzlich ist eine Funktion \texttt{evalPolynomial} vorhanden, die für einen gegebenen Satz an $m$ Polynomkoeffizienten $a_i$ und einen Wert $x \in R$ die Funktion $y = a_0 + a_1 x + a_2 x^2 + \dots + a_{m-1} x^{m-1}$ berechnet. In \texttt{InvertDistortion} wird die übergebene Verzerrrungsfunktion abgetastet und anschließend der Koeffizientenvektor der inversen Funktion genähert.
->>>>>>> 46086d2b145640cc29c1a44853b3fd2213cffa29
+
 \begin{lstlisting}[caption={"Abtasten" des Verzerrungsmodells und Invertierung}]
 // fill sample vector according to the model used
 for (int i = 0; i < sampleSize; i++) {
@@ -259,11 +244,7 @@ Neben dieser eigentlichen Implementierung der neuen Kameraklasse waren noch geri
 \begin{itemize}
 	\item Mögliche neue Parameter müssen in der Funktion \texttt{MakeCamera} aus der Szenenbeschreibung geparsed werden und im Konstruktor von \texttt{DistortionCamera} hinzugefügt werden.
 	\item Der Name des neuen Modells und die benötigte Anzahl von Koeffizienten müssen in der Variablen \texttt{numCoeffsForModel} hinzugefügt werden.
-<<<<<<< HEAD
-	\item Eine Funktion, die die Modellberechnung durchführt, muss implementiert werden. Die bisherigen Modellfunktionen sind als \texttt{inline} Funktionen in \texttt{distortion.h} implementiert worden.
-=======
 	\item Die Funktion, die die eigentliche Modellberechnung durchführt, muss implementiert werden. Die aktuellen Modellfunktionen sind in als \texttt{inline} deklarierten Funktionen in \texttt{distortion.h} implementiert worden.
->>>>>>> 46086d2b145640cc29c1a44853b3fd2213cffa29
 	\item Schließlich muss die Modellfunktion in \texttt{InvertDistortion} ausgewählt werden, wenn das neue Modell übergeben wird.
 \end{itemize}
 
