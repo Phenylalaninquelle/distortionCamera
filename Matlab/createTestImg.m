@@ -1,5 +1,5 @@
 %% create test img
-function img = createTestImg(choice)
+function img = createTestImg(choice,gray)
 
 %%
 zero_img = zeros(1000,1000,3);
@@ -30,6 +30,10 @@ end
 if ischar(choice)
     %%
     img = double(imread(choice))/256;
+    
 end
 
+if gray
+    img = rgb2gray(img);
+end
 
