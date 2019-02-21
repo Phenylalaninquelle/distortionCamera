@@ -22,8 +22,9 @@ Diese ergibt sich aus der maximalen Intensität des Bildes $I_\text{max}$ und de
 \begin{equation}
 	PSNR = 10\cdot \log_{10} (I_\text{max}^2/\text{MSE})
 \end{equation}
+Es sei hier erwähnt, dass die PSNR keine Metrik für Bildqualität ist, sondern für die Fehlerabschätzung beliebiger Signale genutzt wird \cite{Akramullah2014}.
 
-Da die Verzerrung und Entzerrung keine chromatischen Aberrationen mit einbezieht, wird jeder Farbkanal mit der gleichen Verzerrung berechnet. Aus diesem Grund werden zum Vergleich lediglich Grauwerte gezeigt.
+Da die Verzerrung und Entzerrung keine chromatischen Aberrationen mit einbezieht, wird jeder Farbkanal mit der gleichen Verzerrung berechnet. Aus diesem Grund werden zum Vergleich der Bilddaten lediglich Grauwerte gezeigt.
 
 \subsection{Implementierung in Matlab}
 Die Ver- und Entzerrung in Matlab erfolgt durch eine Funktion namens \texttt{distortImage}. Diese nimmt als Eingangswerte ein Eingangsbild und ein Array von Polynomkoeffizienten sowie mehrere optionale Parameter entgegen. Die optionalen Übergabeparameter erlauben ein Verschieben des Bildmittelpunktes und die Auswahl zwischen Ver- und Entzerrung des Bildes mit den gegebenen Koeffizienten. 
@@ -71,7 +72,7 @@ Die Interpolatoren sind so konfiguriert, dass die Bildbereiche außerhalb des g�
 %% Bestimmung der Region of Interest für Entzerrung
 roi = ~isnan(imgOut);
 \end{lstlisting}
-Der für die Verzerrung \texttt{ScatteredInterpolant} interpoliert zwischen gegebenen Bildpunkten auf Basis einer Triangulation der Punkte. Die gesamte Basis interpolierbarer Punkte ist dabei die konvexe Hülle der Gesamtpunkte (vgl. Abbildung~\ref{fig:convex_hull}). Einige dieser Punkte lägen bei einer unverzerrten Kamera außerhalb des Bildes, daher kann die Interpolation in diesem Bereich keine sinnvollen Werte liefern. Im Folgenden wird der fehlerhafte Bereich dennoch als Teil der ROI beachtet, da die Bestimmung einer passenden konkaven Hülle den Umfang dieser Arbeit überschreiten würde.
+Der für die Verzerrung eingesetzte \texttt{ScatteredInterpolant} interpoliert zwischen gegebenen Bildpunkten auf Basis einer Triangulation der Punkte. Die gesamte Basis interpolierbarer Punkte ist dabei die konvexe Hülle der Gesamtpunkte (vgl. Abbildung~\ref{fig:convex_hull}). Einige dieser Punkte lägen bei einer unverzerrten Kamera außerhalb des Bildes, daher kann die Interpolation in diesem Bereich keine sinnvollen Werte liefern. Im Folgenden wird der fehlerhafte Bereich dennoch als Teil der ROI beachtet, da die Bestimmung einer passenden konkaven Hülle den Umfang dieser Arbeit überschreiten würde.
 \begin{figure}[h]
 	\begin{minipage}{.3\textwidth}
 		\centering
@@ -180,14 +181,3 @@ Insgesamt kann daher davon ausgegangen werden, dass das entwickelte pbrt Modell 
 \caption{Auswertung der Reihe von Bildern mit PSNR und maximalem Absolutfehler (höchster Bildwert ist 1). Mit * markierte Werte stammen von der ungenauen ROI (Abschnitt~\ref{sec:roi})}
 \label{tbl:comparison}
 \end{table}
-
-
-
-
-
-
-
-
-
-
- 
