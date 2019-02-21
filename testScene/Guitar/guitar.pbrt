@@ -1,0 +1,115 @@
+LookAt 0.8 0.3 1.6  # eye
+       0.8 0.3 0.2  # look at point
+       0 1 0    # up vector
+       
+       
+Camera "perspective" "float fov" 45
+Sampler "sobol" "integer pixelsamples" 32
+Integrator "bdpt" "integer maxdepth" 20
+Film "image" "string filename" "./guitar.png"
+     "integer xresolution" [1600] "integer yresolution" [1200]
+
+
+WorldBegin
+
+LightSource "infinite" "blackbody L" [6000 0.1]
+
+LightSource "spot" 
+        "point from" [ 2 -2.5 2] 
+        "point to" [ 1 -0.2 0.2 ] 
+        "float coneangle" [30]
+        "blackbody I" [3200 80]
+        
+LightSource "spot" 
+        "point from" [ 1 -0.2 9] 
+        "point to" [ 1 0.2 0.2 ] 
+        "float coneangle" [50]
+        "blackbody I" [3200 100]        
+    
+
+AttributeBegin
+   Texture "wood" "color" "imagemap" 
+    "string filename" [ "./Texture/woodPlatane.png" ]
+    "string wrap" "repeat" 
+    Material "matte" "texture Kd" "wood"
+    Rotate 1 0 0 1
+    Shape "plymesh" "string filename" "./Geometry/guitarFretboard.ply" 
+AttributeEnd
+
+
+AttributeBegin
+    Material "metal"
+    "spectrum eta" "./spds/Ag.eta.spd"
+    "spectrum k" "./spds/Ag.k.spd"
+    Rotate 1 0 0 1
+    Shape "plymesh" "string filename" "./Geometry/guitarFret1.ply" 
+AttributeEnd
+
+AttributeBegin
+    Material "metal"
+    "spectrum eta" "./spds/Ag.eta.spd"
+    "spectrum k" "./spds/Ag.k.spd"
+    Rotate 1 0 0 1
+    Shape "plymesh" "string filename" "./Geometry/guitarFret2.ply" 
+AttributeEnd
+
+AttributeBegin
+    Material "metal"
+    "spectrum eta" "./spds/Ag.eta.spd"
+    "spectrum k" "./spds/Ag.k.spd"
+    Rotate 1 0 0 1
+    Shape "plymesh" "string filename" "./Geometry/guitarString1.ply" 
+AttributeEnd
+
+AttributeBegin
+    Material "metal"
+    "spectrum eta" "./spds/Ag.eta.spd"
+    "spectrum k" "./spds/Ag.k.spd"
+    Rotate 1 0 0 1
+    Shape "plymesh" "string filename" "./Geometry/guitarString2.ply" 
+AttributeEnd
+
+AttributeBegin
+    Material "metal"
+    "spectrum eta" "./spds/Ag.eta.spd"
+    "spectrum k" "./spds/Ag.k.spd"
+    Rotate 1 0 0 1
+    Shape "plymesh" "string filename" "./Geometry/guitarString3.ply" 
+AttributeEnd
+
+AttributeBegin
+    Material "metal"
+    "spectrum eta" "./spds/Ag.eta.spd"
+    "spectrum k" "./spds/Ag.k.spd"
+    Rotate 1 0 0 1
+    Shape "plymesh" "string filename" "./Geometry/guitarString4.ply" 
+AttributeEnd
+
+AttributeBegin
+    Material "metal"
+    "spectrum eta" "./spds/Ag.eta.spd"
+    "spectrum k" "./spds/Ag.k.spd"
+    Rotate 1 0 0 1
+    Shape "plymesh" "string filename" "./Geometry/guitarString5.ply" 
+AttributeEnd
+
+AttributeBegin
+    Material "metal"
+    "spectrum eta" "./spds/Ag.eta.spd"
+    "spectrum k" "./spds/Ag.k.spd"
+    Rotate 1 0 0 1
+    Shape "plymesh" "string filename" "./Geometry/guitarString6.ply" 
+AttributeEnd
+
+AttributeBegin
+    Material "translucent" 
+        "rgb Kd" [ 0.7 0.7 0.7 ] 
+        "rgb Ks" [ 0.3 0.3 0.3] 
+        "rgb reflect" [0.4 0.4 0.4]
+        Translate 0 0 1.2
+        Rotate 33 1 0 0 
+    Shape "plymesh" "string filename" "./Geometry/backgroundMesh.ply" 
+AttributeEnd
+
+
+WorldEnd

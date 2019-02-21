@@ -1,0 +1,26 @@
+ 
+LookAt 0 0 48  # eye
+       0 0  0  # look at point
+       1 0 0    # up vector
+Camera "distortion" "float fov" 45 "string model" "poly3lensfun" "float coefficients" [ -0.03732 ]
+
+Sampler "halton" "integer pixelsamples" 32
+Integrator "path"
+Film "image" "string filename" ""
+     "integer xresolution" [1200] "integer yresolution" [800]
+
+WorldBegin
+
+LightSource "infinite" "blackbody L" [5500 1]
+
+AttributeBegin
+  Texture "texturePattern" "spectrum" "imagemap" "string filename" "./textures/Dot-80px.png"
+          "string wrap" "repeat" "float uscale" [20] "float vscale" [20]
+  Material "matte" "texture Kd" "texturePattern"
+  Shape "trianglemesh"
+      "integer indices" [0 1 2 0 2 3]
+      "point P" [ -30 -30 0   30 -30 0   30 30 0   -30 30 0 ]
+      "float st" [ 0 0   1 0    1 1   0 1 ]
+AttributeEnd
+
+WorldEnd
