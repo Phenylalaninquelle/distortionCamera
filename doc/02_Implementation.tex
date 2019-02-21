@@ -183,7 +183,7 @@ Die Implementierung von \texttt{DistortionCamera} ist in den Dateien \texttt{dis
 
 
 Im Konstruktor der Klasse wird zunächst eine Validierung des übergebenen Verzerrungsmodell durchgeführt. Ist kein Modell in der zu rendernden Szene definiert, so wird die inverse Verzerrungsfunktion zu $f(r) = r$ gesetzt. Das Rendering entspricht dann dem einer \texttt{PerspectiveCamera}. Anschließend wird überprüft, ob das übergebende Modell implementiert ist und die korrekte Anzahl an Koeffizienten übergeben wurde. Dies geschieht anhand der Variablen \texttt{numCoeffsForModel}. Sind die Eingabeparameter korrekt, wird per LS die inverse Verzerrungsfunktion angenähert. Da alle implementierten Modelle Polynome höchstens fünften Grades darstellen, wird zur Näherung ein Polynom fünften Grades verwendet. 
-Des Weiteren wird im Konstruktor die Transformation \texttt{Normalize} (siehe \ref{subsubsec:norm_radius} sowie die dazugehörige inverse Transformation \texttt{Denormalize} definiert. Diese setzen die in Abschnitt \ref{subsubsec:norm_radius} beschriebenen Normalisierung der Pixelkoordinaten um.
+Des Weiteren wird im Konstruktor die Transformation \texttt{Normalize} (siehe \ref{subsubsec:norm_radius}) sowie die dazugehörige inverse Transformation \texttt{Denormalize} definiert. Diese setzen die in Abschnitt \ref{subsubsec:norm_radius} beschriebenen Normalisierung der Pixelkoordinaten um.
 
 \begin{lstlisting}[caption={Transformation zur Normalisierung der Pixelkoordinaten}]
 /* -------- Define transformations for ray generation --------*/
