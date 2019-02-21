@@ -1,29 +1,25 @@
 \section{Einleitung}
 
-Im Rahmen der vorliegenden Arbeit wurde ein Modell in den Raytracer pbrt integriert, welches die Verzerrungen durch reale Objektive simuliert. Liegen gemessenen Verzerrungsparameter einer Optik vor, können diese vor dem Rendervorgang übergeben werden und es wird eine physikalisch korrekte Berechnung dieser Verzerrung durchgeführt.
-
-Alle Ergebnisse und die genutzten Test-Szenen finden sich in folgendem Git-Repository: \cite{git-Distortion_Camera}
+Im Rahmen der vorliegenden Arbeit wurde ein Modell in den Raytracer pbrt integriert, welches die Verzerrungen durch reale Objektive simuliert. Liegen gemessene Verzerrungsparameter einer Optik vor, können diese vor dem Rendervorgang übergeben werden und es wird eine physikalisch korrekte Berechnung dieser Verzerrung durchgeführt.
+Alle Ergebnisse und die genutzten Test-Szenen finden sich im folgendem Git-Repository: \url{https://github.com/Phenylalaninquelle/distortionCamera}. Die Implementierung der Klasse kann unter \url{https://github.com/Phenylalaninquelle/pbrt-v3} über den Tag \texttt{submissionCommit} abgerufen werden.
 
 \section{Theorie}
 
 \subsection{Was ist ein Raytracer?}\label{sec:Raytracer}
 
-Dazu muss zu Erst der Begriff \textit{Rendering} erklärt werden. Dieser beschreibt ganz Allgemein den Prozess, der aus der Beschreibung einer dreidimensionalen Szene ein zweidimensionales Bild erzeugt. Dazu sind zahlreiche Algorithmen notwendig, welche beispielsweise Geometrien modellieren, Objekte animieren oder Texturen erzeugen und die Ergebnisse hiervon an den Render-Prozess weitergeben, um diese sichtbar zu machen. 
+Dazu muss zuerst der Begriff \textit{Rendering} erklärt werden. Dieser beschreibt ganz allgemein den Prozess, der aus der Beschreibung einer dreidimensionalen Szene ein zweidimensionales Bild erzeugt. Dazu sind zahlreiche Algorithmen notwendig, welche beispielsweise Geometrien modellieren, Objekte animieren oder Texturen erzeugen und die Ergebnisse hiervon an den Render-Prozess weitergeben, um diese sichtbar zu machen. 
 
-Um eine dreidimensionale Szene in ein Bild abzubilden, kann sich des Raytracing Algorithmus bedient werden. Wie sich bereits aus dem Begriff ableiten lässt, werden dabei die Pfade einzelner \glqq Lichtstrahlen\grqq{ }verfolgt, bis diese auf eine Oberflächen treffen und es beispielsweise zu einer Reflexion kommt. In diesem Fall würden nun die Richtungen und Intensitäten der reflektierten Strahlen bestimmt und diese weiter verfolgt.
-
+Um eine dreidimensionale Szene in ein Bild abzubilden, kann sich des Raytracing-Algorithmus bedient werden. Wie sich bereits aus dem Begriff ableiten lässt, werden dabei die Pfade einzelner \glqq Lichtstrahlen\grqq{ }verfolgt, bis diese auf eine Oberflächen treffen und es beispielsweise zu einer Reflexion kommt. In diesem Fall würden nun die Richtungen und Intensitäten der reflektierten Strahlen bestimmt und diese weiter verfolgt.
 Da dabei nur diejenigen Strahlen von Interesse sind, welche auch tatsächlich auf den virtuellen Bildsensor treffen und für den Helligkeits- und Farbwert eines Pixels im Bild einen Beitrag leisten, verfolgen Raytracer die Strahlen in umgekehrter Richtung. Es werden also Strahlen am Bildsensor erzeugt und in die Szene geschickt, bis sie mit einer Oberfläche interagieren. Auf diese Weise werden alle Lichtquellen identifiziert, die für die Berechnung des Helligkeits- und Farbwertes des gerade betrachteten Pixels relevant sind \cite{pbrt_book}. 
 
-Der in dieser Arbeit genutzte Raytracer ist \textit{pbrt}\cite{pbrt}. Dieser hat den Anspruch das Rendering \textit{physically based}, also möglichst physikalisch korrekt, durchzuführen. Aus diesem Grund sind hier viele fundamentale Gleichungen der Optik implementiert und Phänomene werden somit korrekt berechnet. Im Gegensatz dazu stehen Raytracer, welche für Animationsfilme oder Computerspiele genutzt werden. Hier soll das Endergebnis möglichst \textit{gut} aussehen, ohne unbedingt physikalisch korrekt zu sein. 
+Der in dieser Arbeit genutzte Raytracer ist \textit{pbrt}\cite{pbrt}. Dieser hat den Anspruch, das Rendering \textit{physically based}, also möglichst physikalisch korrekt, durchzuführen. Aus diesem Grund sind hier viele fundamentale Gleichungen der Optik implementiert und Phänomene werden somit korrekt berechnet. Im Gegensatz dazu stehen Raytracer, welche für Animationsfilme oder Computerspiele genutzt werden. Hier soll das Endergebnis möglichst \textit{gut} aussehen, ohne unbedingt physikalisch korrekt zu sein. 
 
-Trotz des Anspruchs von pbrt, möglichst physikalisch korrekte Resultate zu erzeugen, sind manche optische Phänomene noch nicht implementiert. So besteht im Moment noch keine Möglichkeit die optischen Verzerrungen nachzubilden, welche von allen realen Optiken verursachte werden.
-
-In der vorliegenden Arbeit soll ein neues Kameramodell in den frei verfügbaren Quellcode von pbrt eingefügt werden, welches gemessenen Verzerrungen von Optiken berechnet.
+Trotz des Anspruchs von pbrt, möglichst physikalisch korrekte Resultate zu erzeugen, sind manche optische Phänomene noch nicht implementiert. So besteht im Moment noch keine Möglichkeit, die optischen Verzerrungen nachzubilden, welche von allen realen Optiken verursacht werden.
+In der vorliegenden Arbeit wird ein neues Kameramodell in den frei verfügbaren Quellcode von pbrt eingefügt, welches gemessene Verzerrungen von Optiken berechnet.
 
 \subsection{Verzerrung}
 
 Die Verzerrungen, welche von realen Optiken verursacht werden, führen dazu, dass in der Realität ungekrümmte Linien in der zweidimensionalen Abbildung gekrümmt erscheinen. Dies geschieht dadurch, dass Punkte im aufgenommenen Bild verschoben abgebildet werden und zwar umso stärker, je weiter sie von der optischen Achse entfernt sind. Besonders gut lässt sich dieser Effekt mit Weitwinkelobjektiven an Hausfassaden beobachten. 
-
 Genauer wird dabei zwischen Kissen- und Tonnenverzeichnung unterschieden. In Abbildung \ref{fig:distortionBarrel} und \ref{fig:distortionPinc} wird deutlich, dass bei der Kissenverzeichnung (auch positive Verzeichnung) die Bildpunkte von der optischen Achse weg verschoben werden, während der Abstand der Bildpunkte zur optischen Achse bei der Tonnenverzeichnung (auch negative Verzeichnung) kleiner wird. Durch die bereits erwähnte Zunahme dieses Effekts mit steigendem Radius zur optischen Achse, erfahren in der Realität gerade Linien eine Krümmung \cite{smith2000modern}.
 
 \begin{figure}[h]
@@ -84,7 +80,6 @@ Genauer wird dabei zwischen Kissen- und Tonnenverzeichnung unterschieden. In Abb
 \subsection{Lochkameramodell}\label{sec:pinhole}
 
 Das einfachste Kameramodell, welches beim Rendern von Bildern genutzt werden kann, ist das Lochkameramodell, welches in Abbildung \ref{fig:pinholeCam} dargestellt ist. 
-
 \begin{figure}[h]
 	\centering
 	\begin{tikzpicture}[scale=0.4]
@@ -103,7 +98,7 @@ Das einfachste Kameramodell, welches beim Rendern von Bildern genutzt werden kan
 	\draw[thick, red, ->] (10.5, 0) -- (-7, 0);
 	%Koordinatensystem
 	\draw[semithick, gray, ->] (0,0) -- (0,2) node[right] {$x$};
-	\draw[semithick, gray, ->] (0,0) -- (2,0) node[right] {$z$};
+	\draw[semithick, gray, ->] (0,0) -- (2,0) node[below] {$z$};
 	%Beschriftung
 	\node[draw] at (-7, 6) {Sensor};
 	\node[draw] at (0, 8) {Lochblende};
@@ -133,9 +128,7 @@ Das einfachste Kameramodell, welches beim Rendern von Bildern genutzt werden kan
 	\caption{Lochkamera-Modell im zweidimensionalen Fall}
 	\label{fig:pinholeCam}
 \end{figure}
-
 Alle Lichtstrahlen, welche auf den Sensor treffen, müssen die Blende durch das infinitesimal kleine Loch passieren. Durch Größe des Sensors und dessen Abstand zur Blende wird das Sichtfeld (auch FOV, Field of view) festgelegt.
-
 Durch die Anwendung der Ähnlichkeitssätze für Dreiecke, kann aus den Koordinaten des Gegenstands (rechts der Lochblende) auf die Bildkoordinaten auf dem Sensor (links der Lochblende) geschlossen werden, wie in Abbildung \ref{fig:pinholeCam} für die x-Koordinate dargestellt ist \cite{pbrt_book}:
 
 \begin{equation}
@@ -153,13 +146,13 @@ Wie bereits im Kapitel \ref{sec:Raytracer} erwähnt, treffen bei der Anwendung d
 
 In der Praxis werden häufig radialsymmetrische Modelle genutzt, um die in Kapitel \ref{sec:DistortionRaytracer} beschriebene Verzerrung zu beschreiben. Da auch der Großteil der im Internet frei verfügbaren Messdaten von realen Objektiven auf solchen radialsymmetrischen Modellen basiert, werden in dieser Arbeit nur solche berücksichtigt.
 
-Aus der Radialsymmetrie folgt, dass die Funktion $f(p_1)$ lediglich von einem Radius $r$ abhängt. Zuerst muss dafür ein Verzerrungszentrum $(x_c, y_c)$ festgelegt werden, welches dem Bildmittelpunkt entspricht, wenn dessen genaue Lage nicht messtechnisch bestimmt wurde. Nach Festlegung des Verzerrungszentrums kann der Radius $r$ folgendermaßen bestimmt werden:
+Aus der Radialsymmetrie folgt, dass die Funktion $f(p_1)$ lediglich von einem Radius $r$ abhängt. Zuerst muss dafür ein Verzerrungszentrum $(x_z, y_z)$ festgelegt werden, welches dem Bildmittelpunkt entspricht, wenn dessen genaue Lage nicht messtechnisch bestimmt wurde. Nach Festlegung des Verzerrungszentrums kann der Radius $r$ folgendermaßen bestimmt werden:
 
 \begin{equation}
-r = \sqrt{(x- x_c)^2 + (y-y_c)^2}
+r = \sqrt{(x- x_z)^2 + (y-y_z)^2}
 \end{equation}
 
-Die Transformation zwischen zwei Radien ($r_1$) und ($r_2$), kann nun durch Polynome der folgenden Form erfolgen \cite{TangDistortionModels}:
+Die Transformation zwischen zwei Radien ($r_1$) und ($r_2$), kann nun beispielsweise durch Polynome der folgenden Form erfolgen \cite{TangDistortionModels}:
 
 \begin{equation}
 r_2 = f(r_1) = r_1 (k_0 + k_1r_1 + k_2r_1^2 + ...)
@@ -201,7 +194,7 @@ Eine solche Transformation ist in Abbildung \ref{fig:DistExample} dargestellt un
 
 Die später im Kapitel \ref{sec:Modeldefinitions} vorgestellten Polynome sind teilweise dahingehend optimiert, dass sich der maximal mögliche unverzerrte Radius durch das Verzerrungsmodell nicht verändert. So wird eine unnötige Skalierung des gesamten Bildes vermieden \cite{ScalePreservingLensDistortion}.
 
-Generell kann mit jedem Modell sowohl verzerrt, als auch entzerrt werden. Soll jedoch mit einem Verzerrungsmodell entzerrt werden, müssen die durch Messungen bestimmten Koeffizienten neu erstellt oder eine Umkehrfunktion gebildet werden. Die Koeffizienten legen also damit fest, in welche \glqq Richtung\grqq{ }ein Modell funktioniert. Da, wie in Kapitel \ref{subsec:implementation} beschrieben, keine analytische Umkehrfunktion gefunden werden kann, sind numerische Methoden nötig, um eine solche Invertierung einer Ver- oder Entzerrung zu erreichen. 
+Generell kann mit jedem Modell sowohl verzerrt, als auch entzerrt werden \cite{TangDistortionModels}. Soll jedoch mit einem Verzerrungsmodell entzerrt werden, müssen die durch Messungen bestimmten Koeffizienten neu erstellt oder eine Umkehrfunktion gebildet werden. Die Koeffizienten legen also damit fest, in welche \glqq Richtung\grqq{ }ein Modell funktioniert. Da, wie in Kapitel \ref{subsec:implementation} beschrieben, für die verwendeten Modelle keine einfache analytische Umkehrfunktion gefunden werden kann, sind numerische Methoden nötig, um eine solche Invertierung einer Ver- oder Entzerrung zu erreichen. 
 
 Aus den Überlegungen am Ende des Kapitels \ref{sec:DistortionRaytracer} folgt, dass eine real gemessene Verzerrungsfunktion beim Einsatz im Raytracer invertiert werden muss, um hier die korrekte Verzerrung zu berechnen. Ohne Invertierung würde sich die Art der Verzerrung (kissen-/tonnenförmig) umkehren. Die gemessene tonnenförmige Verzeichnung eines realen Objektivs würde also im Raytracer fälschlicherweise zu einer kissenförmigen Verzerrungen führen und umgekehrt.
 
