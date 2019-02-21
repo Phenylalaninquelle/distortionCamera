@@ -101,6 +101,7 @@ Die Basis des folgenden Vergleiches bildet eine Reihe von gerenderten Verzerrung
 	\item[Koeffizient $k_1$] Von $k_1 = 0.0125$ wiederholt verdoppelt bis $k_1 = 0.4$.
 \end{description}
 Sowohl das Testbild aus Abbildung~\ref{fig:test_img}, die gerenderten Testbilder und die daraus in Matlab entstandenen Bilder sind im dieser Arbeit zugehörigen Git-Repository \cite{git-Distortion_Camera} zu finden. Beispiele sind in Abbildung~\ref{fig:rendered_examples} zu sehen.
+Die PSNR-Werte bei Tests mit anderen Verzerrungsmodellen liegen im gleichen Wertebereich (ca. $37-40\text{ dB}$ bei geringer Verzerrung). Das Poly3-Modell wurde zum Vergleich gewählt, da die Verzerrung nur von einem Parameter abhängt.
 \begin{figure}[h]
 	\centering
 	\begin{minipage}{.3\textwidth}
@@ -152,8 +153,8 @@ In Abbildung~\ref{fig:difference_dist_0_4} ist im oberen Bildrand zu erkennen, w
 \end{figure}
 
 Tabelle~\ref{tbl:comparison} zeigt den Einfluss der Stärke der Verzerrung auf die Ähnlichkeit der Ergebnisse von Matlab und pbrt. Grundsätzlich ergibt sich aus einer stärkeren Verzerrung ein größerer Interpolationsfehler. 
-Die PSNR-Werte bei Tests mit anderen Verzerrungsmodellen liegen im gleichen Wertebereich (ca. $37-40\text{ dB}$ bei geringer Verzerrung). Bei der Verschiebung des perspektivischen Bildes um einen halben Pixel ergibt sich beim Vergleich mit der unverschobenen Version eine PSNR von $32.22 \text{ dB}$.
-Insgesamt kann daher davon ausgegangen werden, dass das entwickelte pbrt Modell die Verzerrung korrekt berechnet.
+Bei der Verschiebung des perspektivischen Bildes um einen halben Pixel ergibt sich beim Vergleich mit der unverschobenen Version eine PSNR von $32.22 \text{ dB}$.
+Insgesamt kann daher davon ausgegangen werden, dass das entwickelte pbrt Modell die Verzerrung korrekt berechnet und die Rasterpunkte auf die korrekten Bildkoordinaten abgebildet werden.
 
 \begin{table}
 	\centering
