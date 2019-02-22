@@ -3,9 +3,9 @@ LookAt 0.8 0.3 1.6  # eye
        0 1 0    # up vector
        
        
-Camera "perspective" "float fov" 45
+Camera "distortion" "float fov" 45 "string model" "poly3lensfun" "float coefficients" [ -0.03732 ]
 Sampler "sobol" "integer pixelsamples" 32
-Integrator "bdpt" "integer maxdepth" 20
+Integrator "path" "integer maxdepth" 20
 Film "image" "string filename" "./guitar.png"
      "integer xresolution" [1600] "integer yresolution" [1200]
 
